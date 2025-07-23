@@ -1,1 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Grade 11 Class Schedule | IETI College</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a5d1a;
+            --secondary: #fbbf24;
+            --accent: #3b82f6;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            color: #1f2937;
+        }
+        
+        /* Subject-specific colors */
+        .subject-values { background: linear-gradient(to bottom right, #D8BFD8, #c5a5c5); }
+        .subject-emptech { background: linear-gradient(to bottom right, #D2B48C, #c0a070); }
+        .subject-oral-comm { background: linear-gradient(to bottom right, #FFA500, #e69500); }
+        .subject-earth-science { background: linear-gradient(to bottom right, #FF69B4, #e658a3); }
+        .subject-kpwkp { background: linear-gradient(to bottom right, #6495ED, #5a85d5); }
+        .subject-gen-math { background: linear-gradient(to bottom right, #2E8B57, #297a4d); }
+        .subject-philo { background: linear-gradient(to bottom right, #483D8B, #40367d); }
+        .subject-pe-health { background: linear-gradient(to bottom right, #FFC0CB, #e6acb6); }
+        .subject-pre-calculus { background: linear-gradient(to bottom right, #FFFF00, #e6e600); }
+        .subject-break { background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb); }
+        
+        .current-class {
+            position: relative;
+            animation: pulse 2s infinite;
+            border: 3px solid #fbbf24;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(251, 191, 36, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+        }
+        
+        .has-note-indicator::after {
+            content: '📝';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .schedule-card {
+            transition: all 0.3s ease;
+            transform: perspective(1000px) rotateX(0deg);
+        }
+        
+        .schedule-card:hover {
+            transform: perspective(1000px) rotateX(5deg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .day-header {
+            background: linear-gradient(to right, var(--primary), #2c7a2c);
+            color: white;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .time-cell {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .subject-cell {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .subject-cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .today-highlight {
+            background: linear-gradient(to right, #fffbeb, #fef3c7);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent), #60a5fa);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white rounded-full p-3 shadow-lg">
+                    <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center text-gray-500 font-bold">LOGO</div>
+                </div>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-green-900 mb-2">IETI College of Science and Technology</h1>
+            <p class="text-lg sm:text-xl text-green-700 font-medium mb-1">San Pedro City, Laguna</p>
+            <p class="text-md text-green-600">School Year 2025 - 2026 (1ST SEMESTER)</p>
+        </header>
+        
+        <!-- Class Info Card -->
+        <div class="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden">
+            <div class="bg-gradient-to-r from-green-800 to-green-700 text-white p-5 text-center">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">GRADE 11 GAS A CLASS SCHEDULE</h2>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-3">
+                    <div class="bg-green-600 px-4 py-2 rounded-full text-sm font-medium">
+                        GRADE 11 GAS A / ROOM 107
+                    </div>
+                    <div class="bg-yellow-500 text-green-900 px-4 py-2 rounded-full text-sm font-medium">
+                        ADVISER: MS. ROZANNE MILLEN MANOZO
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-5 bg-gradient-to-r from-green-50 to-emerald-50">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center">
+                            <i class="fas fa-clock text-green-900"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Current Time</p>
+                            <p id="current-time" class="text-lg font-semibold text-green-800">00:00:00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button id="downloadAllNotes" class="px-4 py-2 bg-yellow-500 text-green-900 font-semibold rounded-lg hover:bg-yellow-600 transition-all flex items-center gap-2 shadow-md hover:shadow-lg">
+                            <i class="fas fa-download"></i> Download All Notes
+                        </button>
+                        <button id="printSchedule" class="px-4 py-2 bg-green-700 text-white font-semibold rounded-lg hover:bg-green-800 transition-all flex items-center gap-2 shadow-md hover:shadow-lg">
+                            <i class="fas fa-print"></i> Print Schedule
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Schedule Navigation -->
+        <div class="flex flex-wrap gap-2 mb-6 justify-center">
+            <button class="day-filter px-4 py-2 rounded-lg bg-green-700 text-white font-medium" data-day="all">All Days</button>
+            <button class="day-filter px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium" data-day="Monday">Monday</button>
+            <button class="day-filter px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium" data-day="Tuesday">Tuesday</button>
+            <button class="day-filter px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium" data-day="Wednesday">Wednesday</button>
+            <button class="day-filter px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium" data-day="Thursday">Thursday</button>
+            <button class="day-filter px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium" data-day="Friday">Friday</button>
+        </div>
+        
+        <!-- Schedule Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Monday Card -->
+            <div class="schedule-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="day-header p-4 text-center">
+                    <h3 class="text-xl font-bold">Monday</h3>
+                    <p class="text-sm opacity-90" id="monday-date">June 1, 2025</p>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-3">
+                        <div class="subject-cell subject-values p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">VALUES EDUCATION</p>
+                                    <p class="text-sm">07:30 - 09:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. H. PALLE</div>
+                            </div>
+                            <div class="mt-2">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="flex justify-between text-xs mt-1">
+                                    <span>65% completed</span>
+                                    <span>📝</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-emptech p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">EMPTECH</p>
+                                    <p class="text-sm">09:30 - 11:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MRS. R. SANTOS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-gen-math p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">GEN. MATH</p>
+                                    <p class="text-sm">11:00 - 12:30</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. JM. ROJO</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center my-2 font-medium text-gray-500">BREAK</div>
+                        
+                        <div class="subject-cell subject-philo p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">PHILO</p>
+                                    <p class="text-sm">13:30 - 15:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. R. SALCEDO</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-pre-calculus p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">PRE-CALCULUS</p>
+                                    <p class="text-sm">16:30 - 18:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. A. PEÑALOSA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tuesday Card -->
+            <div class="schedule-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="day-header p-4 text-center">
+                    <h3 class="text-xl font-bold">Tuesday</h3>
+                    <p class="text-sm opacity-90" id="tuesday-date">June 2, 2025</p>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-3">
+                        <div class="subject-cell subject-emptech p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">EMPTECH</p>
+                                    <p class="text-sm">07:30 - 09:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MRS. R. SANTOS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-earth-science p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">EARTH SCIENCE</p>
+                                    <p class="text-sm">09:30 - 11:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. RB. JUGANAS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-oral-comm p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">ORAL COMM</p>
+                                    <p class="text-sm">11:00 - 12:30</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. CD. BABAS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center my-2 font-medium text-gray-500">BREAK</div>
+                        
+                        <div class="subject-cell subject-kpwkp p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">KPWKP</p>
+                                    <p class="text-sm">13:30 - 15:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. RM. MAÑOZO</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-philo p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">PHILO</p>
+                                    <p class="text-sm">15:00 - 16:30</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. R. SALCEDO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wednesday Card -->
+            <div class="schedule-card bg-white rounded-2xl shadow-lg overflow-hidden today-highlight">
+                <div class="day-header p-4 text-center">
+                    <h3 class="text-xl font-bold">Wednesday</h3>
+                    <p class="text-sm opacity-90" id="wednesday-date">June 3, 2025</p>
+                    <div class="mt-1 inline-block bg-yellow-500 text-green-900 px-2 py-1 rounded-full text-xs font-bold">TODAY</div>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-3">
+                        <div class="subject-cell subject-oral-comm p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">ORAL COMM</p>
+                                    <p class="text-sm">07:30 - 09:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. CD. BABAS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-kpwkp p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">KPWKP</p>
+                                    <p class="text-sm">09:30 - 11:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. RM. MAÑOZO</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-gen-math p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">GEN. MATH</p>
+                                    <p class="text-sm">11:00 - 12:30</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. JM. ROJO</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center my-2 font-medium text-gray-500">BREAK</div>
+                        
+                        <div class="subject-cell subject-pe-health p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">PE & HEALTH 1</p>
+                                    <p class="text-sm">13:30 - 15:00</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MS. H. PALLE</div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-cell subject-earth-science p-3 rounded-lg text-white">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">EARTH SCIENCE</p>
+                                    <p class="text-sm">15:00 - 16:30</p>
+                                </div>
+                                <div class="bg-white bg-opacity-30 rounded-full px-2 py-1 text-xs font-medium">MR. RB. JUGANAS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Classes -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <h3 class="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-calendar-alt"></i> Upcoming Classes
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-max">
+                    <thead>
+                        <tr class="bg-green-100 text-green-800">
+                            <th class="p-3 text-left">Class</th>
+                            <th class="p-3 text-left">Day & Time</th>
+                            <th class="p-3 text-left">Teacher</th>
+                            <th class="p-3 text-left">Status</th>
+                            <th class="p-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-200 hover:bg-green-50">
+                            <td class="p-3 font-medium">ORAL COMM</td>
+                            <td class="p-3">Wed, 07:30 - 09:00</td>
+                            <td class="p-3">MR. CD. BABAS</td>
+                            <td class="p-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">In Progress</span></td>
+                            <td class="p-3">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm hover:bg-green-200">
+                                    <i class="fas fa-sticky-note mr-1"></i> Add Note
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-green-50">
+                            <td class="p-3 font-medium">KPWKP</td>
+                            <td class="p-3">Wed, 09:30 - 11:00</td>
+                            <td class="p-3">MS. RM. MAÑOZO</td>
+                            <td class="p-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Upcoming</span></td>
+                            <td class="p-3">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm hover:bg-green-200">
+                                    <i class="fas fa-sticky-note mr-1"></i> Add Note
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-green-50">
+                            <td class="p-3 font-medium">GEN. MATH</td>
+                            <td class="p-3">Wed, 11:00 - 12:30</td>
+                            <td class="p-3">MS. JM. ROJO</td>
+                            <td class="p-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Upcoming</span></td>
+                            <td class="p-3">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm hover:bg-green-200">
+                                    <i class="fas fa-sticky-note mr-1"></i> Add Note
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="w-full bg-green-900 text-white rounded-2xl p-6 mt-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <h4 class="font-bold text-lg mb-2">Administration</h4>
+                    <p class="mb-1">IRA B. ALMONGUERA</p>
+                    <p class="text-green-300 text-sm">SHS Head</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="font-bold text-lg mb-2">Principal</h4>
+                    <p class="mb-1">DR. LYNDA P. PARREÑO</p>
+                    <p class="text-green-300 text-sm">BED Principal</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="font-bold text-lg mb-2">Contact</h4>
+                    <p class="mb-1">ieti@example.edu.ph</p>
+                    <p class="mb-1">(049) 123-4567</p>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-green-700 text-center text-green-300 text-sm">
+                &copy; 2025 IETI College of Science and Technology. All rights reserved.
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Note Modal -->
+    <div id="noteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl flex flex-col max-h-[90vh]">
+            <div class="p-5 bg-gradient-to-r from-green-700 to-green-600 text-white flex justify-between items-center">
+                <h3 id="modalTitle" class="text-xl font-bold">Add Note for VALUES EDUCATION</h3>
+                <button id="closeModal" class="text-white hover:text-yellow-300 text-2xl">&times;</button>
+            </div>
+            <div class="p-5 flex-grow overflow-y-auto">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2 font-medium">Class Details</label>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <p><strong>Teacher:</strong> MS. H. PALLE</p>
+                        <p><strong>Time:</strong> Monday, 07:30 - 09:00</p>
+                        <p><strong>Room:</strong> 107</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2 font-medium">Your Note</label>
+                    <textarea id="noteTextarea" class="w-full h-40 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Type your notes here..."></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2 font-medium">Attachments</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-500">Click to upload files or drag and drop</p>
+                        <p class="text-sm text-gray-400">PDF, DOC, JPG, PNG (Max 10MB)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center gap-3 flex-wrap">
+                <div>
+                    <p id="lastSaved" class="text-sm text-gray-500">Last saved: Never</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="clearNote" class="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-trash-alt mr-2"></i>Clear
+                    </button>
+                    <button id="downloadNote" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+                        <i class="fas fa-file-arrow-down"></i>Download
+                    </button>
+                    <button id="saveNote" class="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                        <i class="fas fa-save"></i>Save Note
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        // Set initial time and update every second
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+        
+        // Set dates for this week
+        const today = new Date();
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - today.getDay() + 1);
+        document.getElementById('monday-date').textContent = formatDate(monday);
+        
+        const tuesday = new Date(monday);
+        tuesday.setDate(monday.getDate() + 1);
+        document.getElementById('tuesday-date').textContent = formatDate(tuesday);
+        
+        const wednesday = new Date(monday);
+        wednesday.setDate(monday.getDate() + 2);
+        document.getElementById('wednesday-date').textContent = formatDate(wednesday);
+        
+        function formatDate(date) {
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Day filtering functionality
+        const dayFilters = document.querySelectorAll('.day-filter');
+        const scheduleCards = document.querySelectorAll('.schedule-card');
+        
+        dayFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                const day = filter.dataset.day;
+                
+                // Update active filter
+                dayFilters.forEach(f => f.classList.remove('bg-green-700', 'text-white'));
+                dayFilters.forEach(f => f.classList.add('bg-gray-200', 'hover:bg-gray-300'));
+                
+                filter.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                filter.classList.add('bg-green-700', 'text-white');
+                
+                // Filter cards
+                scheduleCards.forEach(card => {
+                    if (day === 'all') {
+                        card.classList.remove('hidden');
+                    } else {
+                        const cardDay = card.querySelector('.day-header h3').textContent;
+                        if (cardDay === day) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        });
+        
+        // Modal functionality
+        const noteModal = document.getElementById('noteModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        
+        // Open modal when clicking on a subject
+        const subjectCells = document.querySelectorAll('.subject-cell');
+        subjectCells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                const subject = cell.querySelector('.font-bold').textContent;
+                document.getElementById('modalTitle').textContent = `Add Note for ${subject}`;
+                noteModal.classList.remove('hidden');
+                noteModal.classList.add('flex');
+            });
+        });
+        
+        // Close modal
+        closeModalBtn.addEventListener('click', () => {
+            noteModal.classList.add('hidden');
+            noteModal.classList.remove('flex');
+        });
+        
+        // Print button
+        document.getElementById('printSchedule').addEventListener('click', () => {
+            window.print();
+        });
+        
+        // Save note button
+        document.getElementById('saveNote').addEventListener('click', () => {
+            const saveBtn = document.getElementById('saveNote');
+            saveBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Saved!';
+            saveBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            saveBtn.classList.add('bg-green-800');
+            
+            // Update last saved time
+            const now = new Date();
+            document.getElementById('lastSaved').textContent = `Last saved: ${now.toLocaleTimeString()}`;
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Save Note';
+                saveBtn.classList.remove('bg-green-800');
+                saveBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+            }, 2000);
+        });
+        
+        // Clear note button
+        document.getElementById('clearNote').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear this note?')) {
+                document.getElementById('noteTextarea').value = '';
+                document.getElementById('lastSaved').textContent = 'Last saved: Never';
+            }
+        });
+    });
+    </script>
+</body>
+</html>
